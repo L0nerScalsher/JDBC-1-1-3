@@ -3,10 +3,7 @@ package jm.task.core.jdbc.dao;
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,19 +17,11 @@ public class UserDaoJDBCImpl implements UserDao {
 
     @Override
     public void createUsersTable() {
-//        String sql = "CREATE TABLE IF NOT EXISTS public.users\n" +
-//                "(\n" +
-//                "    id integer NOT NULL DEFAULT nextval('users_id_seq'::regclass),\n" +
-//                "    name character varying(50) COLLATE pg_catalog.\"default\" NOT NULL,\n" +
-//                "    lastname character varying(50) COLLATE pg_catalog.\"default\" NOT NULL,\n" +
-//                "    age smallint NOT NULL,\n" +
-//                "    CONSTRAINT users_pkey PRIMARY KEY (id, name, lastname, age)\n" +
-//                ")\n";
-        String sql = "CREATE TABLE users (" +
-                "id INTEGER NOT NULL PRIMARY KEY" +
-                "name VARCHAR(64) NOT NULL" +
-                "last_name VARCHAR(64) NOT NULL" +
-                "age SMALLINT not NULL";
+        String sql = "CREATE TABLE IF NOT EXISTS users (" +
+                "id SERIAL PRIMARY KEY," +
+                "name VARCHAR(64) NOT NULL," +
+                "last_name VARCHAR(64) NOT NULL," +
+                "age SMALLINT not NULL)";
 
 
         try (Statement stmt = conn.createStatement()) {
@@ -57,9 +46,13 @@ public class UserDaoJDBCImpl implements UserDao {
 
     @Override
     public void saveUser(String name, String lastName, byte age) {
-        String sql = "INSERT INTO users (name, last_name, age) VALUES (" + name + "," + lastName + "," + age + ")";
-        try (Statement stmt = conn.createStatement()) {
-            stmt.execute(sql);
+        String sql = "INSERT INTO users (name, last_name, age) VALUES (?, ?, ?)";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, name);
+            stmt.setString(2, lastName);
+            stmt.setByte(3, age);
+            stmt.executeUpdate();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

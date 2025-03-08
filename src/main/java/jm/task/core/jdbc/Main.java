@@ -14,9 +14,9 @@ public class Main {
 
         userDao.createUsersTable();
 
-        userDao.saveUser("vlad", "testoviy", (byte) 25);
-        userDao.saveUser("vlad2", "priemniy", (byte) 25);
-        userDao.saveUser("vlad3", "vlad", (byte) 25);
+        userDao.saveUser("Name1", "LastName1", (byte) 25);
+        userDao.saveUser("Name2", "LastName2", (byte) 26);
+        userDao.saveUser("Name3", "LastName3", (byte) 27);
 
         userDao.removeUserById(1);
 
@@ -26,19 +26,13 @@ public class Main {
         }
         userDao.removeUserById(3);
         System.out.println("-----------------------------");
+
         List<User> userList2 = userDao.getAllUsers();
         for (User user : userList2) {
             System.out.println(user);
         }
-        System.out.println("-----------------------------");
 
         userDao.cleanUsersTable();
 
-        List<User> userList3 = userDao.getAllUsers();
-        for (User user : userList3) {
-            System.out.println(user);
-        }
-
-        userDao.dropUsersTable();
     }
 }

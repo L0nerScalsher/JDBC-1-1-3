@@ -26,6 +26,7 @@ public class UserDaoJDBCImpl implements UserDao {
 
         try (Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
+            System.out.println("Таблица создана");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -38,6 +39,7 @@ public class UserDaoJDBCImpl implements UserDao {
 
         try (Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
+            System.out.println("Таблица удалена");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -47,11 +49,12 @@ public class UserDaoJDBCImpl implements UserDao {
     @Override
     public void saveUser(String name, String lastName, byte age) {
         String sql = "INSERT INTO users (name, last_name, age) VALUES (?, ?, ?)";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, name);
-            stmt.setString(2, lastName);
-            stmt.setByte(3, age);
-            stmt.executeUpdate();
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, name);
+            pstmt.setString(2, lastName);
+            pstmt.setByte(3, age);
+            pstmt.executeUpdate();
+            System.out.println("User с именем — " + name + " добавлен в базу данных");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -60,9 +63,11 @@ public class UserDaoJDBCImpl implements UserDao {
 
     @Override
     public void removeUserById(long id) {
-        String sql = "DELETE FROM users WHERE id = " + id;
-        try (Statement stmt = conn.createStatement()) {
-            stmt.execute(sql);
+        String sql = "DELETE FROM users WHERE id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setLong(1, id);
+            pstmt.executeUpdate();
+            System.out.println("User с id - " + id + " удален");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -94,6 +99,7 @@ public class UserDaoJDBCImpl implements UserDao {
         String sql = "TRUNCATE TABLE users;";
         try (Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
+            System.out.println("Таблица очищена");
         } catch (SQLException e) {
             e.printStackTrace();
         }

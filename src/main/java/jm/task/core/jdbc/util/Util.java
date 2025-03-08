@@ -14,6 +14,7 @@ public class Util {
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(DB, USER, PASSWORD);
+            System.out.println("Соединение установлено");
         } catch (SQLException e) {
             e.printStackTrace();
         }

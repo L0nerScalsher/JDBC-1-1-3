@@ -17,15 +17,9 @@ public class UserDaoJDBCImpl implements UserDao {
 
     @Override
     public void createUsersTable() {
-        String sql = "CREATE TABLE IF NOT EXISTS users (" +
-                "id SERIAL PRIMARY KEY," +
-                "name VARCHAR(64) NOT NULL," +
-                "last_name VARCHAR(64) NOT NULL," +
-                "age SMALLINT not NULL)";
-
 
         try (Statement stmt = conn.createStatement()) {
-            stmt.execute(sql);
+            stmt.execute(CREATE);
             System.out.println("Таблица создана");
         } catch (SQLException e) {
             e.printStackTrace();
@@ -35,10 +29,9 @@ public class UserDaoJDBCImpl implements UserDao {
 
     @Override
     public void dropUsersTable() {
-        String sql = "DROP TABLE IF EXISTS users;";
 
         try (Statement stmt = conn.createStatement()) {
-            stmt.execute(sql);
+            stmt.execute(DROP);
             System.out.println("Таблица удалена");
         } catch (SQLException e) {
             e.printStackTrace();

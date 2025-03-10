@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 import jm.task.core.jdbc.model.User;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
@@ -53,6 +52,12 @@ public class Util {
         }
         System.out.println("Соединение установлено");
         return sessionFactory;
+    }
+
+    public static void closeSessionFactory() {
+        if (sessionFactory != null) {
+            sessionFactory.close();
+        }
     }
 
 

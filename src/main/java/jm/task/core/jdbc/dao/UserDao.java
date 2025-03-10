@@ -13,7 +13,7 @@ public interface UserDao {
             "age SMALLINT not NULL);";
 
     String DROP = "DROP TABLE IF EXISTS users;";
-
+    String CLEAN = "TRUNCATE TABLE users;";
 
 
     void createUsersTable();

@@ -2,10 +2,9 @@ package jm.task.core.jdbc.dao;
 
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
-import net.bytebuddy.asm.MemberSubstitution;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 
 import java.util.List;
 
@@ -26,8 +25,6 @@ public class UserDaoHibernateImpl implements UserDao {
             session.createNativeQuery(CREATE).executeUpdate();
             session.getTransaction().commit();
 
-        } finally {
-            sessionFactory.close();
         }
 
     }
@@ -39,8 +36,6 @@ public class UserDaoHibernateImpl implements UserDao {
             session.createNativeQuery(DROP).executeUpdate();
             session.getTransaction().commit();
 
-        } finally {
-            sessionFactory.close();
         }
     }
 
@@ -52,14 +47,23 @@ public class UserDaoHibernateImpl implements UserDao {
             session.save(user);
             session.getTransaction().commit();
             System.out.println("User с именем — " + name + " добавлен в базу данных");
-        } finally {
-            sessionFactory.close();
         }
     }
 
     @Override
     public void removeUserById(long id) {
+        try (Session session = sessionFactory.getCurrentSession()) {
+            session.beginTransaction();
+            User user = session.get(User.class, id);
+            if (user != null) {
+                session.delete(user);
+                System.out.println("User с id — " + id + " удален из базы данных");
+            } else {
+                System.out.println("User с id — " + id + " не найден");
+            }
+            session.getTransaction().commit();
 
+        }
     }
 
     @Override
@@ -69,13 +73,17 @@ public class UserDaoHibernateImpl implements UserDao {
             List<User> users = session.createQuery("from User").getResultList();
             session.getTransaction().commit();
             return users;
-        } finally {
-            sessionFactory.close();
         }
     }
 
     @Override
     public void cleanUsersTable() {
+        try (Session session = sessionFactory.getCurrentSession()) {
+            session.beginTransaction();
+            session.createNativeQuery(CLEAN).executeUpdate();
+            session.getTransaction().commit();
+            System.out.println("Таблица очищена");
+        }
 
     }
 }
